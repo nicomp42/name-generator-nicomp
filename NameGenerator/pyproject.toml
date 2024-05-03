@@ -1,0 +1,28 @@
+[project]
+name = "name_generator_nicomp"
+version = "1.0.0"
+authors = [
+  { name="Bill Nicholson", email="DirkGentlyHHGG@Gmail.com" },
+]
+description = "Generate random names from a list of nouns and adjectives as you might see in a Kahoot game. I'm not affiliated with Kahoot except as an end-user."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/nicomp42/name_generator"
+Issues = "https://github.com/nicomp42/name_generator/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.txt"]
