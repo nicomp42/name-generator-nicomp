@@ -1,4 +1,8 @@
 # Name Generator
+# NameGenerator.py
+# Bill Nicholson
+# DirkGentlyHHGG@gmail.com
+# https://github.com/nicomp42/name-generator-nicomp
 
 from pathlib import Path
 import random
@@ -10,8 +14,8 @@ class NameGenerator:
     """
     def __init__(self, noun_file = None, adjective_file = None, seed = None, guarantee_unique = True, nouns_to_add = [], adjectives_to_add = [], generated_names_to_not_use = []):
         """ Constructor
-        :param noun_file str: The file with path if necessaary) containing the nouns to be used in generating names. Default to None.
-        :param adjective_file str: The file with path if necessaary) containing the adjectives to be used in generating names. Defaults to None.
+        :param noun_file str: The file with path if necessary) containing the nouns to be used in generating names. Default to None to use the default set of nouns in nouns.txt.
+        :param adjective_file str: The file with path if necessaary) containing the adjectives to be used in generating names. Defaults to None to use the default set of adjectives in adjectives.txt.
         :param seed int: The seed for the random number generator used when generating names. Defaults to None for a truly random experience.
         :param guarantee_unique bool: Do not return the same name twice. Defaults to True.
         :param nouns_to_add list: A list of nouns that supplements the nouns in the file specified above. Defaults to None.
@@ -36,8 +40,18 @@ class NameGenerator:
         self.seed = seed
         self.prepare()
 
-
-    def read_data(self, file_name):
+    def __str__(self):
+        """ String representation of the current object
+        :return str: A String summarizing the object
+        """
+        return f'("total_nouns:", {len(self.nouns)}, "total_adjectives:", {len(self.adjectives)}, "total_generated_names: ", {len(self.used_names)})'
+        
+    def __read_data(self, file_name):
+        """ Read from a text file into a list. One line becomes one list element.
+        :param file_name str: The file to process
+        :return list: The list of things read from the file.
+        """
+        
         data = []
         try:    
             with importlib.resources.open_text("src.data", file_name) as my_file:
@@ -63,12 +77,11 @@ class NameGenerator:
             random.seed(self.seed)
 
         if self.noun_file != None:
-            self.nouns = list(self.read_data("nouns.txt"))
+            self.nouns = list(self._NameGenerator__read_data("nouns.txt"))
             #print("nouns:", self.nouns)
         if self.adjective_file != None:
-            self.adjectives = list(self.read_data("adjectives.txt"))
-            
-
+            self.adjectives = list(self._NameGenerator__read_data("adjectives.txt"))
+ 
         for noun in self.nouns_to_add:
             self.nouns.append(noun)
         for adjective in self.adjectives_to_add:
@@ -79,42 +92,45 @@ class NameGenerator:
         """ Get the nouns that will used to generate random names
         :return list: The list of nouns
         """
-        return self.nouns
+        return list(self.nouns)
     
     def get_adjectives(self):
         """ Get the adjectives that will used to generate random names
         :return list: The list of adjectives
         """
-        return self.adjectives
+        return list(self.adjectives)
     
     def get_used_names(self):
         """ Get the generated names to this point
         :return set: The set of names that have been generated since the object was instantiated or prepare was invoked, whichever happened most recently.
         """
-        return self.used_names
+        return set(self.used_names)
     
     def clear_generated_names(self):
         """ Clear the current set of generated names so names can be re-used when generate_name is called
         """
         self.used_names = set()
 
-    def generate_name(self):
+    def generate_name(self, save_name = True):
         """ Generate a random name
+        :param save_name bool: True if the generated name should be stored internally to prevent duplicates in this object. If True, the generated name will not be checked for uniqueness. Default to True.
         :return str: the randonly generated name as a String
         """
-        
-        if len(self.nouns) * len(self.adjectives) == len(self.used_names):
-            # Sanity check: are there any names left to generate? 
-            print(len(self.nouns), len(self.adjectives), len(self.nouns) * len(self.adjectives), len(self.used_names))
-            print("nouns:", self.nouns)
-            print("adjectives:", self.adjectives)
-            print("used_names:", self.used_names)
-            raise RuntimeError('NameGenerator.generate_name: there are no more unused adjective/noun combinations')
+        if save_name:
+            if len(self.nouns) * len(self.adjectives) == len(self.used_names):
+                # Sanity check: are there any names left to generate? 
+                print(len(self.nouns), len(self.adjectives), len(self.nouns) * len(self.adjectives), len(self.used_names))
+                print("nouns:", self.nouns)
+                print("adjectives:", self.adjectives)
+                print("used_names:", self.used_names)
+                raise RuntimeError('NameGenerator.generate_name: there are no more unused adjective/noun combinations')
         
         while True:
             generated_name = random.choice(self.adjectives) + random.choice(self.nouns)
             if generated_name in self.generated_names_to_not_use:
                 continue
+            if not save_name:
+                break
             if self.guarantee_unique:
                 #print("***" , generatedName)
                 if generated_name not in self.used_names:

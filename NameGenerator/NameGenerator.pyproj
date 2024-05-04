@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>ea78b802-7850-49dc-bbf2-d83183d5ac58</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>main.py</StartupFile>
+    <StartupFile>src\mainPackage\main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,16 +21,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="main.py" />
-    <Compile Include="src\data\__init__.py" />
-    <Compile Include="src\main\__init__.py" />
+    <Compile Include="src\mainPackage\main.py" />
+    <Compile Include="src\mainPackage\__init__.py" />
     <Compile Include="src\name_generator_nicomp\NameGenerator.py" />
     <Compile Include="src\name_generator_nicomp\__init__.py" />
+    <Compile Include="src\name_generator_nicomp\utilities.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\name_generator_nicomp\" />
-    <Folder Include="src\main\" />
-    <Folder Include="src\data\" />
+    <Folder Include="src\mainPackage\" />
     <Folder Include="tests\" />
     <Folder Include="src\" />
   </ItemGroup>
@@ -38,8 +37,10 @@
     <Content Include="LICENSE" />
     <Content Include="pyproject.toml" />
     <Content Include="README.md" />
-    <Content Include="src\data\adjectives.txt" />
-    <Content Include="src\data\nouns.txt" />
+    <Content Include="src\name_generator_nicomp\adjectives_master.txt" />
+    <Content Include="src\name_generator_nicomp\nouns_master.txt" />
+    <Content Include="src\name_generator_nicomp\adjectives.txt" />
+    <Content Include="src\name_generator_nicomp\nouns.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
