@@ -1,6 +1,6 @@
 [project]
 name = "name_generator_nicomp"
-version = "1.0.0"
+version = "1.0.1"
 authors = [
   { name="Bill Nicholson", email="DirkGentlyHHGG@Gmail.com" },
 ]
@@ -14,8 +14,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/nicomp42/name_generator"
-Issues = "https://github.com/nicomp42/name_generator/issues"
+Homepage = "https://github.com/nicomp42/name-generator-nicomp"
+Issues = "https://github.com/nicomp42/name-generator-nicomp/issues"
 
 [build-system]
 requires = ["hatchling"]
