@@ -12,12 +12,16 @@ class NameGenerator:
     """
     Randomly generate names using a noun and an adjective. Similar to the names generated in a Kahoot game.
     """
-    def __init__(self, noun_file = None, adjective_file = None, seed = None, guarantee_unique = True, nouns_to_add = [], adjectives_to_add = [], generated_names_to_not_use = []):
+    def __init__(self, noun_file = None, adjective_file = None, seed = None, guarantee_unique_names = True, 
+                 guarantee_unique_adjectives = False, guarantee_unique_nouns = False,
+                 nouns_to_add = [], adjectives_to_add = [], generated_names_to_not_use = []):
         """ Constructor
         :param noun_file str: The file with path if necessary) containing the nouns to be used in generating names. Default to None to use the default set of nouns in nouns.txt.
         :param adjective_file str: The file with path if necessaary) containing the adjectives to be used in generating names. Defaults to None to use the default set of adjectives in adjectives.txt.
         :param seed int: The seed for the random number generator used when generating names. Defaults to None for a truly random experience.
-        :param guarantee_unique bool: Do not return the same name twice. Defaults to True.
+        :param guarantee_unique_names bool: Do not return the same name twice. Defaults to True.
+        :param guarantee_unique_nouns bool: Do not use the same noun twice. Defaults to False
+        :param guarantee_unique_adjectives bool: Do not use the same adjective twice. Defaults to False
         :param nouns_to_add list: A list of nouns that supplements the nouns in the file specified above. Defaults to None.
         :param adjectives_to_ad listd: A list of adjectives that supplements the adjectives in the file specified above. Defaults to None
         :param generated_names_to_not_use list: A list of names that should not be returned from the generate_name method. Defaults to None.
@@ -32,7 +36,9 @@ class NameGenerator:
         self.nouns = None
         self.adjectives = None
         self.seed = seed
-        self.guarantee_unique = guarantee_unique
+        self.guarantee_unique_names = guarantee_unique_names
+        self.guarantee_unique_nouns = guarantee_unique_nouns
+        self.guarantee_unique_adjectives = guarantee_unique_adjectives
         self.used_names = set()
         self.nouns_to_add = nouns_to_add
         self.adjectives_to_add = adjectives_to_add
@@ -119,33 +125,48 @@ class NameGenerator:
         if save_name:
             if len(self.nouns) * len(self.adjectives) == len(self.used_names):
                 # Sanity check: are there any names left to generate? 
-                print(len(self.nouns), len(self.adjectives), len(self.nouns) * len(self.adjectives), len(self.used_names))
+                #print(len(self.nouns), len(self.adjectives), len(self.nouns) * len(self.adjectives), len(self.used_names))
                 print("nouns:", self.nouns)
                 print("adjectives:", self.adjectives)
                 print("used_names:", self.used_names)
                 raise RuntimeError('NameGenerator.generate_name: there are no more unused adjective/noun combinations')
         
         while True:
-            generated_name = random.choice(self.adjectives) + random.choice(self.nouns)
+            generated_adjective = random.choice(self.adjectives)
+            generated_noun = random.choice(self.nouns)
+            
+            generated_name = generated_adjective + " " + generated_noun
             if generated_name in self.generated_names_to_not_use:
                 continue
             if not save_name:
                 break
-            if self.guarantee_unique:
+            if self.guarantee_unique_names:
                 #print("***" , generatedName)
                 if generated_name not in self.used_names:
                     self.used_names.add(generated_name)
                     break
             else:
                 break
+        # When we get this far we have a name. 
+        # 
+        # If the adjective and/or the noun should not be re-used, they will be removed from the list.
+        if self.guarantee_unique_adjectives:
+            self.adjectives.remove(generated_adjective)
+        if self.guarantee_unique_nouns:
+            self.nouns.remove(generated_noun)
+        #print("NameGenerator.generate_name: generated", generated_name)
         return generated_name
 
     if __name__ == "__main__":
         print("Test main in NameGenerator.py...")
+        """
         nouns = []
         with importlib.resources.open_text("src.data", "nouns.txt") as my_file:
             #my_file = open(self.noun_file, 'r')
             #read text file into list 
             nouns = my_file.read().split("\n")
         print("nouns", nouns)    
-    
+       
+        nameGenerator = NameGenerator()
+        print(nameGenerator.generate_name())
+        """

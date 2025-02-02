@@ -20,3 +20,6 @@ Rhino
 Llama
 Emu
 Elk
+Eagle
+Zebra
+Llama
